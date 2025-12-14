@@ -2,13 +2,61 @@
 
 A TypeScript toolkit for generating and validating LikeC4 architecture diagrams that adhere to Simon Brown's C4 methodology.
 
+**Built on top of [@likec4/core](https://github.com/likec4/likec4)** - leveraging its ecosystem while adding opinionated constraints.
+
+---
+
+## Quick Start
+
+```typescript
+import { generate, validate } from 'thatssoc4';
+
+// Define your architecture with type safety
+const model = {
+  actors: [
+    {
+      id: 'platformTeam',
+      title: 'Platform Team',
+      tag: 'team',
+      slack_channel: '#platform',
+      owns: ['backend']  // Ownership is explicit
+    }
+  ],
+  systems: [
+    {
+      id: 'backend',
+      title: 'Backend Services',
+      tags: ['critical'],
+      containers: [/* ... */]
+    }
+  ]
+};
+
+// Validate constraints
+const result = validate(model);
+if (!result.valid) {
+  console.error(result.violations);
+  process.exit(1);
+}
+
+// Generate LikeC4 DSL
+const dsl = generate(model);
+
+// Use with @likec4/core ecosystem:
+// - LikeC4 CLI
+// - VS Code extension
+// - Programmatic model API
+```
+
+See [USAGE.md](USAGE.md) for complete guide.
+
 ---
 
 ## Why This Exists
 
 Architecture documentation has a tendency to drift. Diagrams get out of sync, ownership becomes unclear, and the boundaries between systems blur over time. This toolkit addresses that by encoding architectural constraints directly into a type-safe system that can validate both new and existing models.
 
-Built on top of `@likec4/core`, we get the full power of LikeC4's model traversal and parsing capabilities while layering on opinionated constraints that keep documentation honest.
+**Integration with @likec4/core**: We generate valid LikeC4 DSL that works seamlessly with the entire @likec4 ecosystem. Our role is constraint validation and enforcement - @likec4/core provides the foundation and tooling. See [docs/INTEGRATION.md](docs/INTEGRATION.md) for details.
 
 ---
 
@@ -164,11 +212,27 @@ platformTeam = actor 'Platform Team' {
 
 ---
 
+## Examples
+
+- **[examples/simple-model.ts](examples/simple-model.ts)** - Complete model definition
+- **[examples/test-example.ts](examples/test-example.ts)** - Validation and DSL generation
+- **[examples/integration-example.ts](examples/integration-example.ts)** - Full @likec4/core integration
+
+Run examples:
+```bash
+npx tsx examples/test-example.ts
+npx tsx examples/integration-example.ts
+```
+
+---
+
 ## Documentation
 
-- [Architecture](docs/ARCHITECTURE.md) - Implementation design and module structure
-- [Constraints](docs/CONSTRAINTS.md) - Complete rules and validation logic
-- [Schema](docs/SCHEMA.md) - Input data structures and TypeScript interfaces
+- **[USAGE.md](USAGE.md)** - Complete usage guide with examples
+- **[docs/INTEGRATION.md](docs/INTEGRATION.md)** - @likec4/core integration details
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) - Implementation design
+- [docs/CONSTRAINTS.md](docs/CONSTRAINTS.md) - Complete validation rules
+- [docs/SCHEMA.md](docs/SCHEMA.md) - TypeScript interface reference
 
 ---
 
