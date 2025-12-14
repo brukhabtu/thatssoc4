@@ -1,0 +1,42 @@
+{
+  "name": "thatssoc4",
+  "version": "0.1.0",
+  "description": "TypeScript toolkit for generating and validating LikeC4 C4 model diagrams - that's so C4",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest",
+    "lint": "eslint src/",
+    "validate": "ts-node src/cli/validate.ts",
+    "generate": "ts-node src/cli/generate.ts"
+  },
+  "keywords": [
+    "c4",
+    "c4-model",
+    "likec4",
+    "architecture",
+    "documentation",
+    "diagrams"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@likec4/core": "^1.42.0",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "eslint": "^8.0.0",
+    "ts-node": "^10.9.0",
+    "typescript": "^5.0.0",
+    "vitest": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "dist",
+    "templates"
+  ]
+}

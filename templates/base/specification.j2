@@ -1,0 +1,125 @@
+{# ============================================
+   base/specification.j2
+   
+   Core specification defining the C4 notation.
+   Include this once at the top of your model.
+   ============================================ #}
+specification {
+  // ----------------------------------------
+  // Element Kinds
+  // ----------------------------------------
+  element actor {
+    style {
+      shape person
+      color amber
+    }
+  }
+
+  element system {
+    style {
+      shape rectangle
+      color slate
+    }
+  }
+
+  element container {
+    style {
+      shape rectangle
+      color blue
+    }
+  }
+
+  element component {
+    style {
+      shape rectangle
+      color sky
+    }
+  }
+
+  // ----------------------------------------
+  // Relationship Kinds
+  // ----------------------------------------
+  relationship owns {
+    style {
+      line dotted
+      color green
+    }
+  }
+
+  // ----------------------------------------
+  // Actor Tags
+  // ----------------------------------------
+  tag customer {
+    style {
+      color green
+    }
+  }
+
+  tag internal {
+    style {
+      color blue
+    }
+  }
+
+  tag vendor {
+    style {
+      color violet
+    }
+  }
+
+  tag bot {
+    style {
+      color slate
+    }
+  }
+
+  tag team {
+    style {
+      color indigo
+    }
+  }
+
+  // ----------------------------------------
+  // System Tags
+  // ----------------------------------------
+  tag external {
+    style {
+      color neutral
+    }
+  }
+
+  // ----------------------------------------
+  // Lifecycle Tags (System, Container, Component)
+  // ----------------------------------------
+  tag deprecated {
+    style {
+      color muted
+      border dashed
+    }
+  }
+
+  tag planned {
+    style {
+      color secondary
+      border dotted
+    }
+  }
+
+  // ----------------------------------------
+  // Operational Tags (System, Container)
+  // ----------------------------------------
+  tag critical {
+    style {
+      color red
+    }
+  }
+
+  // ----------------------------------------
+  // Relationship Behaviour Tags
+  // ----------------------------------------
+  tag async {
+    style {
+      line dashed
+    }
+  }
+}

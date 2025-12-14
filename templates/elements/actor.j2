@@ -1,0 +1,33 @@
+{# ============================================
+   elements/actor.j2
+   
+   Template for defining actors (people or systems
+   that interact with your software).
+   
+   Required:
+     - id: Unique identifier (lowercase, underscores)
+     - title: Human-readable name
+     - description: What/who this actor represents
+   
+   Required if #team:
+     - slack_channel: Team's Slack channel
+   
+   Optional:
+     - tag: One of [customer, internal, vendor, bot, team]
+     - owns: List of system ids (only valid for #team actors)
+   ============================================ #}
+{% set allowed_tags = ['customer', 'internal', 'vendor', 'bot', 'team'] %}
+{{ id }} = actor '{{ title }}' {
+{% if tag and tag in allowed_tags %}
+  #{{ tag }}
+{% endif %}
+  description '{{ description }}'
+{% if tag == 'team' %}
+  metadata {
+    slack_channel '{{ slack_channel }}'
+  }
+{% for system_id in owns | default([]) %}
+  .owns {{ system_id }}
+{% endfor %}
+{% endif %}
+}

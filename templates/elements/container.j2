@@ -1,0 +1,63 @@
+{# ============================================
+   elements/container.j2
+   
+   Template for defining containers (deployable units
+   within a system).
+   
+   Required:
+     - id: Unique identifier (lowercase, underscores)
+     - title: Human-readable name
+     - description: What this container does
+     - technology: Primary technology stack
+     - git_url: Link to source repository
+   
+   Optional:
+     - tags: List from [deprecated, planned, critical]
+     - shape: One of [rectangle, storage, queue, browser, mobile]
+     - links: List of {url, type} for ci_pipeline, runbook
+     - metadata: Dict of additional key-value pairs
+     - relationships: List of dependencies (see relationship.j2)
+   
+   Note: Containers can relate to any container, including
+         those in other systems.
+   ============================================ #}
+{% set allowed_tags = ['deprecated', 'planned', 'critical'] %}
+{% set allowed_shapes = ['rectangle', 'storage', 'queue', 'browser', 'mobile'] %}
+{% set allowed_link_types = ['ci_pipeline', 'runbook'] %}
+{{ id }} = container '{{ title }}' {
+{% for tag in tags | default([]) %}
+{% if tag in allowed_tags %}
+  #{{ tag }}
+{% endif %}
+{% endfor %}
+  technology '{{ technology }}'
+  description '{{ description }}'
+{% if shape and shape in allowed_shapes and shape != 'rectangle' %}
+  style {
+    shape {{ shape }}
+  }
+{% endif %}
+  links {
+    {{ git_url }} 'Repository'
+{% for link in links | default([]) %}
+{% if link.type in allowed_link_types %}
+    {{ link.url }} '{{ link.type | replace("_", " ") | title }}'
+{% endif %}
+{% endfor %}
+  }
+{% if metadata %}
+  metadata {
+{% for key, value in metadata.items() %}
+    {{ key }} '{{ value }}'
+{% endfor %}
+  }
+{% endif %}
+{% for rel in relationships | default([]) %}
+  -> {{ rel.to_id }} '{{ rel.label }}' {
+    technology '{{ rel.technology }}'
+{% if rel.is_async %}
+    #async
+{% endif %}
+  }
+{% endfor %}
+}

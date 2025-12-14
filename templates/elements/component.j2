@@ -1,0 +1,56 @@
+{# ============================================
+   elements/component.j2
+   
+   Template for defining components (internal modules
+   within a container).
+   
+   Required:
+     - id: Unique identifier (lowercase, underscores)
+     - title: Human-readable name
+     - description: What this component does
+     - technology: Implementation technology
+   
+   Optional:
+     - tags: List from [deprecated, planned]
+     - links: List of {url, type} for documentation
+     - metadata: Dict of additional key-value pairs
+     - relationships: List of dependencies (sibling components only)
+   
+   Constraints:
+     - Components can ONLY relate to sibling components
+       within the same container
+     - Cross-container dependencies must be modelled
+       at the container level
+   ============================================ #}
+{% set allowed_tags = ['deprecated', 'planned'] %}
+{% set allowed_link_types = ['documentation'] %}
+{{ id }} = component '{{ title }}' {
+{% for tag in tags | default([]) %}
+{% if tag in allowed_tags %}
+  #{{ tag }}
+{% endif %}
+{% endfor %}
+  technology '{{ technology }}'
+  description '{{ description }}'
+{% if links %}
+  links {
+{% for link in links %}
+{% if link.type in allowed_link_types %}
+    {{ link.url }} '{{ link.type | title }}'
+{% endif %}
+{% endfor %}
+  }
+{% endif %}
+{% if metadata %}
+  metadata {
+{% for key, value in metadata.items() %}
+    {{ key }} '{{ value }}'
+{% endfor %}
+  }
+{% endif %}
+{% for rel in relationships | default([]) %}
+  -> {{ rel.to_id }} '{{ rel.label }}' {
+    technology '{{ rel.technology }}'
+  }
+{% endfor %}
+}

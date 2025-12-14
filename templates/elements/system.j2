@@ -1,0 +1,53 @@
+{# ============================================
+   elements/system.j2
+   
+   Template for defining software systems.
+   
+   Required:
+     - id: Unique identifier (lowercase, underscores)
+     - title: Human-readable name
+     - description: What this system does
+   
+   Optional:
+     - tags: List from [external, deprecated, planned, critical]
+     - links: List of {url, label} for wiki, runbook
+     - metadata: Dict of additional key-value pairs
+     - relationships: List of dependencies (see relationship.j2)
+   
+   Note: Ownership is defined via .owns from #team actors,
+         not as metadata on the system itself.
+   ============================================ #}
+{% set allowed_tags = ['external', 'deprecated', 'planned', 'critical'] %}
+{% set allowed_link_types = ['wiki', 'runbook'] %}
+{{ id }} = system '{{ title }}' {
+{% for tag in tags | default([]) %}
+{% if tag in allowed_tags %}
+  #{{ tag }}
+{% endif %}
+{% endfor %}
+  description '{{ description }}'
+{% if links %}
+  links {
+{% for link in links %}
+{% if link.type in allowed_link_types %}
+    {{ link.url }} '{{ link.type | title }}'
+{% endif %}
+{% endfor %}
+  }
+{% endif %}
+{% if metadata %}
+  metadata {
+{% for key, value in metadata.items() %}
+    {{ key }} '{{ value }}'
+{% endfor %}
+  }
+{% endif %}
+{% for rel in relationships | default([]) %}
+  -> {{ rel.to_id }} '{{ rel.label }}' {
+    technology '{{ rel.technology }}'
+{% if rel.is_async %}
+    #async
+{% endif %}
+  }
+{% endfor %}
+}
